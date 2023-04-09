@@ -15,12 +15,12 @@ public class ItemMapper {
         );
     }
 
-    public static Item convertToModel(Integer UserId, ItemDto itemDto) {
+    public static Item convertToModel(Integer userId, ItemDto itemDto) {
         var itemModel = new Item();
         itemModel.setName(itemDto.getName());
         itemModel.setDescription(itemDto.getDescription());
         itemModel.setAvailable(itemDto.getAvailable());
-        itemModel.setOwnerId(UserId);
+        itemModel.setOwnerId(userId);
 
         return itemModel;
     }
