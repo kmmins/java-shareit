@@ -23,6 +23,7 @@ public class UserExceptionHandler {
                 e.getMessage()
         );
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public UserErrorResponse handleUserNotValid(final ValidationException e) {
