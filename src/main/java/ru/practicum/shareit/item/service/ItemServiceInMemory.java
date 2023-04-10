@@ -3,10 +3,10 @@ package ru.practicum.shareit.item.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.NotOwnedByUserException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
-import ru.practicum.shareit.item.exception.ItemNotFoundException;
-import ru.practicum.shareit.item.exception.ItemNotOwnedByUserException;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -27,7 +27,7 @@ public class ItemServiceInMemory implements ItemService {
     }
 
     @Override
-    public ItemDto add(int userId, ItemDto itemDto) {
+    public ItemDto add(Long userId, ItemDto itemDto) {
         userService.getById(userId); // проверка на существование.
         var createdItem = ItemMapper.convertToModel(userId, itemDto);
         var afterCreate = itemRepository.add(createdItem);
@@ -35,28 +35,28 @@ public class ItemServiceInMemory implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAll(int userId) {
+    public List<ItemDto> getAll(Long userId) {
         return itemRepository.getAll(userId).stream()
                 .map(ItemMapper::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemDto getById(int itemId) {
+    public ItemDto getById(Long itemId) {
         // userId можно использовать для подсчета кол-ва просмотров?
         var itemGetById = itemRepository.getById(itemId);
         if (itemGetById == null) {
-            throw new ItemNotFoundException(String.format("Не найден предмет с id %d.", itemId));
+            throw new NotFoundException(String.format("Не найден предмет с id %d.", itemId));
         }
         return ItemMapper.convertToDto(itemGetById);
     }
 
     @Override
-    public ItemDto upd(int userId, int itemId, ItemDto itemDto) {
+    public ItemDto updated(Long userId, Long itemId, ItemDto itemDto) {
         getById(itemId); // проверка на существование.
         var updatedItem = itemRepository.getById(itemId);
         if (!Objects.equals(updatedItem.getOwnerId(), userId)) {
-            throw new ItemNotOwnedByUserException("Редактировать предмет может только владелец.");
+            throw new NotOwnedByUserException("Редактировать предмет может только владелец.");
         }
         if (itemDto.getName() != null) {
             updatedItem.setName(itemDto.getName());
@@ -68,14 +68,14 @@ public class ItemServiceInMemory implements ItemService {
             updatedItem.setAvailable(itemDto.getAvailable());
         }
 
-        var afterUpdate = itemRepository.upd(itemId, updatedItem);
+        var afterUpdate = itemRepository.updated(itemId, updatedItem);
         return ItemMapper.convertToDto(afterUpdate);
     }
 
     @Override
-    public List<ItemDto> getFound(String text) {
+    public List<ItemDto> search(String text) {
         var lowerCaseText = text.toLowerCase();
-        var foundedItems = itemRepository.getFound(lowerCaseText);
+        var foundedItems = itemRepository.search(lowerCaseText);
         return foundedItems.stream()
                 .map(ItemMapper::convertToDto)
                 .collect(Collectors.toList());

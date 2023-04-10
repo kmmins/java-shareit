@@ -3,10 +3,10 @@ package ru.practicum.shareit.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.AlreadyExistException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
-import ru.practicum.shareit.user.exception.UserAlreadyExistException;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class UserServiceInMemory implements UserService {
         boolean duplicate = getAll().stream()
                 .anyMatch(u -> Objects.equals(u.getEmail(), checkedUser.getEmail()));
         if (duplicate) {
-            throw new UserAlreadyExistException(String.format("Email %s уже существует.", checkedUser.getEmail()));
+            throw new AlreadyExistException(String.format("Email %s уже существует.", checkedUser.getEmail()));
         }
         return false;
     }
@@ -47,16 +47,16 @@ public class UserServiceInMemory implements UserService {
     }
 
     @Override
-    public UserDto getById(int id) {
+    public UserDto getById(Long id) {
         var userGetById = userRepository.getById(id);
         if (userGetById == null) {
-            throw new UserNotFoundException(String.format("Не найден пользователь с id: %d.", id));
+            throw new NotFoundException(String.format("Не найден пользователь с id: %d.", id));
         }
         return UserMapper.convertToDto(userGetById);
     }
 
     @Override
-    public UserDto upd(int id, UserDto userDto) {
+    public UserDto updated(Long id, UserDto userDto) {
         getById(id); // проверка на существование.
         var updatedUser = userRepository.getById(id);
         if (userDto.getName() != null) {
@@ -66,13 +66,13 @@ public class UserServiceInMemory implements UserService {
                 userDto.getEmail() != null && !checkDuplicateEmail(userDto)) {
             updatedUser.setEmail(userDto.getEmail());
         }
-        var afterUpdate = userRepository.upd(id, updatedUser);
+        var afterUpdate = userRepository.updated(id, updatedUser);
         return UserMapper.convertToDto(afterUpdate);
     }
 
     @Override
-    public void del(int id) {
+    public void deleted(Long id) {
         getById(id); // проверка на существование.
-        userRepository.del(id);
+        userRepository.deleted(id);
     }
 }

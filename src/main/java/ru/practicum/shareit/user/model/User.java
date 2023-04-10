@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class User {
-    private final Integer id;
+    private final Long id;
     private String name;
     private String email;
 }

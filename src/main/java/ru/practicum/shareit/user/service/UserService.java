@@ -23,18 +23,18 @@ public interface UserService {
      * @param userId - id конкретного пользователя.
      * @return Dto-модель конкретного пользователя.
      */
-    UserDto getById(int userId);
+    UserDto getById(Long userId);
 
     /**
      * Обработка и обновление данных о конктретном пользователе.
      * @param userDto - Dto-модель пользователя, содержащая данные для обновления.
      * @return Dto-модель обновленного пользователя.
      */
-    UserDto upd(int userId, UserDto userDto);
+    UserDto updated(Long userId, UserDto userDto);
 
     /**
      * Проверка существования и удаление конкретного пользователя
      * @param userId - id конкретного пользователя.
      */
-    void del(int userId);
+    void deleted(Long userId);
 }

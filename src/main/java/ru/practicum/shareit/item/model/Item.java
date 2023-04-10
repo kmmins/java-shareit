@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class Item {
-    private final Integer id;
+    private final Long id;
     private String name;
     private String description;
     private Boolean available;
-    private Integer ownerId;
+    private Long ownerId;
     private Integer requestId;
 }

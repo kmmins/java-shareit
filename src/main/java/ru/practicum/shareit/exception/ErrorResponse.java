@@ -1,9 +1,9 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.exception;
 
-public class UserErrorResponse {
+public class ErrorResponse {
     private final String error;
 
-    public UserErrorResponse(String error) {
+    public ErrorResponse(String error) {
         this.error = error;
     }
 

@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ItemRepositoryInMemory implements ItemRepository {
-    private int countItems = 0;
-    private final HashMap<Integer, Item> itemMemoryItemBase = new HashMap<>();
+    private Long countItems = 0L;
+    private final HashMap<Long, Item> itemMemoryItemBase = new HashMap<>();
 
     @Override
     public Item add(Item item) {
@@ -29,19 +29,19 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
-    public List<Item> getAll(int userId) {
+    public List<Item> getAll(Long userId) {
         return itemMemoryItemBase.values().stream()
                 .filter(item -> Objects.equals(item.getOwnerId(), userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Item getById(int id) {
+    public Item getById(Long id) {
         return itemMemoryItemBase.get(id);
     }
 
     @Override
-    public Item upd(int itemId, Item item) {
+    public Item updated(Long itemId, Item item) {
         var updatedItem = itemMemoryItemBase.get(itemId);
         updatedItem.setName(item.getName());
         updatedItem.setDescription(item.getDescription());
@@ -51,14 +51,12 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
-    public List<Item> getFound(String text) {
-        var result = itemMemoryItemBase.values().stream()
+    public List<Item> search(String text) {
+        return itemMemoryItemBase.values().stream()
                 .filter(Item::getAvailable)
                 .filter(item -> (item.getName().toLowerCase().contains(text) && (!text.isEmpty() || !text.isBlank())) ||
                         (item.getDescription().toLowerCase().contains(text) && (!text.isEmpty() || !text.isBlank()))
                 )
                 .collect(Collectors.toList());
-
-        return result;
     }
 }

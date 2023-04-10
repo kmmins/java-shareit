@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.user.exception.UserAlreadyExistException;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
-import ru.practicum.shareit.user.exception.UserParameterException;
-import ru.practicum.shareit.user.model.UserErrorResponse;
+import ru.practicum.shareit.exception.AlreadyExistException;
+import ru.practicum.shareit.exception.ErrorResponse;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ParameterException;
 
 import javax.validation.ValidationException;
 
@@ -17,36 +17,36 @@ import javax.validation.ValidationException;
 public class UserExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public UserErrorResponse handleUserParameter(final UserParameterException e) {
+    public ErrorResponse handleUserParameter(final ParameterException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new UserErrorResponse(
+        return new ErrorResponse(
                 e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public UserErrorResponse handleUserNotValid(final ValidationException e) {
+    public ErrorResponse handleUserNotValid(final ValidationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new UserErrorResponse(
+        return new ErrorResponse(
                 e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public UserErrorResponse handleUserNotFound(final UserNotFoundException e) {
+    public ErrorResponse handleUserNotFound(final NotFoundException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new UserErrorResponse(
+        return new ErrorResponse(
                 e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public UserErrorResponse handleUserAlreadyExist(final UserAlreadyExistException e) {
+    public ErrorResponse handleUserAlreadyExist(final AlreadyExistException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new UserErrorResponse(
+        return new ErrorResponse(
                 e.getMessage()
         );
     }

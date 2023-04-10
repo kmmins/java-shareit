@@ -16,16 +16,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(force = true)
 public class Booking {
     private final int id;
-    private Integer bookingItemId;
+    private Long bookingItemId;
     private LocalDateTime start;
     private LocalDateTime end;
     private Integer bookerId;
     private Status status;
-
-    private enum Status {
-        WAITING,
-        APPROVED,
-        REJECTED,
-        CANCELED
-    }
 }

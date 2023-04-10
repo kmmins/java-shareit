@@ -17,14 +17,14 @@ public interface ItemRepository {
      * @param userId - id пользователя.
      * @return список предметов конкретного пользователя.
      */
-    List<Item> getAll(int userId);
+    List<Item> getAll(Long userId);
 
     /**
      * Получить конкретный предмент из хранилища.
      * @param id - id предмета.
      * @return полную модель.
      */
-    Item getById(int id);
+    Item getById(Long id);
 
     /**
      * Обновить свойства предмета в хранилище.
@@ -32,12 +32,12 @@ public interface ItemRepository {
      * @param item на входе модель предмета.
      * @return полную модель обновленного предмета.
      */
-    Item upd(int itemId, Item item);
+    Item updated(Long itemId, Item item);
 
     /**
      * Поиск в хранилище предмета, содержашего в названии или описании указанный текст.
      * @param text - текст для поиска.
      * @return список полных моделей предметов.
      */
-    List<Item> getFound(String text);
+    List<Item> search(String text);
 }

@@ -27,7 +27,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Integer userId,
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                            @Valid @RequestBody ItemDto itemDto) {
         var addedItemDto = itemService.add(userId, itemDto);
         log.info("Обработка запроса POST /items. Предмет добавлен: {}.", addedItemDto);
@@ -35,31 +35,31 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItem(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public List<ItemDto> getAllItem(@RequestHeader("X-Sharer-User-Id") Long userId) {
         var allItemsDto = itemService.getAll(userId);
         log.info("Обработка запроса GET /items. Получены все предметы владельца: {}.", allItemsDto);
         return allItemsDto;
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getByIdItem(@PathVariable Integer itemId) {
+    public ItemDto getByIdItem(@PathVariable Long itemId) {
         var itemDtoByIdDto = itemService.getById(itemId);
         log.info("Обработка запроса GET /items/{itemId}. Получены данные предмета: {}.", itemDtoByIdDto);
         return itemDtoByIdDto;
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updItem(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                           @PathVariable Integer itemId,
+    public ItemDto updItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                           @PathVariable Long itemId,
                            @RequestBody ItemDto itemDto) {
-        var updatedItemDto = itemService.upd(userId, itemId, itemDto);
+        var updatedItemDto = itemService.updated(userId, itemId, itemDto);
         log.info("Обработка запроса PATCH /items/{itemId}. Предмет обновлен: {}.", updatedItemDto);
         return updatedItemDto;
     }
 
     @GetMapping("/search")
     public List<ItemDto> findItem(@RequestParam String text) {
-        var foundItemsDto = itemService.getFound(text);
+        var foundItemsDto = itemService.search(text);
         log.info("Обработка запроса GET /items/search?text={text}. Предмет найден: {}.", foundItemsDto);
         return foundItemsDto;
     }

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
-    private Integer id;
+    private Long id;
     @NotBlank(message = "не должно быть пустым")
     private String name;
     @NotBlank(message = "не должно быть пустым")

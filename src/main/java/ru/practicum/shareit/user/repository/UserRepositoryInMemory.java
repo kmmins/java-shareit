@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public class UserRepositoryInMemory implements UserRepository {
-    private int countUsers = 0;
-    private final HashMap<Integer, User> userMemoryUserBase = new HashMap<>();
+    private Long countUsers = 0L;
+    private final HashMap<Long, User> userMemoryUserBase = new HashMap<>();
 
     @Override
     public User add(User user) {
@@ -30,12 +30,12 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public User getById(int id) {
+    public User getById(Long id) {
         return userMemoryUserBase.get(id);
     }
 
     @Override
-    public User upd(int id, User user) {
+    public User updated(Long id, User user) {
         var updatedUser = userMemoryUserBase.get(id);
         updatedUser.setName(user.getName());
         updatedUser.setEmail(user.getEmail());
@@ -45,7 +45,7 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public void del(int id) {
+    public void deleted(Long id) {
         userMemoryUserBase.remove(id);
     }
 }

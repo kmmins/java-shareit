@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class ItemRequest {
-    private final int id;
+    private final Long id;
     private String description;
     private Integer userIdWhoRequest;
     private LocalDateTime requestCreatedDateTime;

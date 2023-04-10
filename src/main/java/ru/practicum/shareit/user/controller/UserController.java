@@ -42,23 +42,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Integer id) {
+    public UserDto getUserById(@PathVariable Long id) {
         var userByIdDto = userService.getById(id);
         log.info("Обработка запроса GET /users/{id}. Получены данные пользователя: {}.", userByIdDto);
         return userByIdDto;
     }
 
     @PatchMapping("/{id}")
-    public UserDto updUser(@PathVariable Integer id,
+    public UserDto updUser(@PathVariable Long id,
                            @RequestBody UserDto userDto) {
-        var updatedUserDto = userService.upd(id, userDto);
+        var updatedUserDto = userService.updated(id, userDto);
         log.info("Обработка запроса PATCH /users/{id}. Пользователь обновлен: {}.", updatedUserDto);
         return updatedUserDto;
     }
 
     @DeleteMapping("/{id}")
-    public void delUser(@PathVariable Integer id) {
-        userService.del(id);
+    public void delUser(@PathVariable Long id) {
+        userService.deleted(id);
         log.info("Обработка запроса DELETE /users/{id}. Пользователь c id: {} удален.", id);
     }
 }

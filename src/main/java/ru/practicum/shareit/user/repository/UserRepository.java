@@ -23,7 +23,7 @@ public interface UserRepository {
      * @param id - id конкретного пользователя.
      * @return полную модель конкретного пользователя.
      */
-    User getById(int id);
+    User getById(Long id);
 
     /**
      * Обновление данных конкретного пользователя в хранилище.
@@ -31,11 +31,11 @@ public interface UserRepository {
      * @param user полная модель, содержащая данные для обновления.
      * @return полная модель обновленного пользователя.
      */
-    User upd(int userId, User user);
+    User updated(Long userId, User user);
 
     /**
      * Удаление конкретного пользователя из хранилища.
      * @param id - id конкретного пользователя.
      */
-    void del(int id);
+    void deleted(Long id);
 }
