@@ -49,12 +49,11 @@ class users {
    bigint id
 }
 
-bookings  -->  items : item_id:id
-bookings  -->  users : booker_id:id
-comments  -->  items : item_id:id
-comments  -->  users : author_id:id
-items  -->  requests : request_id:id
-items  -->  users : owner_id:id
-requests  -->  users : request_user_id:id
-
+bookings  -->  items : item_id
+bookings  -->  users : booker_id
+comments  -->  items : item_id
+comments  -->  users : author_id
+items  -->  requests : request_id
+items  -->  users : owner_id
+requests  -->  users : request_user_id
 ```
