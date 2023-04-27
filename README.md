@@ -11,7 +11,8 @@ Repository for study project:
 These technologies were used for this project:
 Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Query Methods, JPQL Query.
 
-[ER-diagram](https://github.com/kmmins/java-shareit/tree/main/assets/shareit.md):
+[ER-diagram](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md):
+```mermaid
 classDiagram
 direction BT
 class bookings {
@@ -54,3 +55,4 @@ comments  -->  users : author_id:id
 items  -->  requests : request_id:id
 items  -->  users : owner_id:id
 requests  -->  users : request_user_id:id
+```
