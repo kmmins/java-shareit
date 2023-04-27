@@ -12,6 +12,7 @@ class comments {
    varchar(512) comment_text
    bigint item_id
    bigint author_id
+   timestamp created
    bigint id
 }
 class items {
