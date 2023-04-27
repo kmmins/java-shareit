@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-public class ItemRequest {
+public class RequestEntity {
+
     private final Long id;
     private String description;
-    private Integer userIdWhoRequest;
-    private LocalDateTime requestCreatedDateTime;
+    private Long userIdWhoRequest;
+    private LocalDateTime requestCreatedTime;
 }

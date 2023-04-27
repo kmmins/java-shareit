@@ -15,6 +15,7 @@ import javax.validation.ValidationException;
 @Slf4j
 @RestControllerAdvice
 public class UserExceptionHandler {
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserParameter(final ParameterException e) {

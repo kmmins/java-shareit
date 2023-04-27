@@ -1,43 +1,48 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemEntity;
 
 import java.util.List;
 
 public interface ItemRepository {
+
     /**
      * Добавление предмета в хранилище.
+     *
      * @param item на входе полная модель.
-     * @return полную модель добваленного предмета.
+     * @return полную модель добавленного предмета.
      */
-    Item add(Item item);
+    ItemEntity add(ItemEntity item);
 
     /**
      * Получить все предметы конкретного пользователя.
-     * @param userId - id пользователя.
+     *
+     * @param userId id пользователя.
      * @return список предметов конкретного пользователя.
      */
-    List<Item> getAll(Long userId);
+    List<ItemEntity> getAllItemsOwnByUser(Long userId);
 
     /**
-     * Получить конкретный предмент из хранилища.
-     * @param id - id предмета.
+     * Получить конкретный предмет из хранилища.
+     *
+     * @param id id предмета.
      * @return полную модель.
      */
-    Item getById(Long id);
+    ItemEntity getById(Long id);
 
     /**
      * Обновить свойства предмета в хранилище.
-     * @param itemId - id предмета.
+     *
      * @param item на входе модель предмета.
      * @return полную модель обновленного предмета.
      */
-    Item updated(Long itemId, Item item);
+    ItemEntity updated(ItemEntity item);
 
     /**
      * Поиск в хранилище предмета, содержашего в названии или описании указанный текст.
-     * @param text - текст для поиска.
+     *
+     * @param text текст для поиска.
      * @return список полных моделей предметов.
      */
-    List<Item> search(String text);
+    List<ItemEntity> search(String text);
 }
