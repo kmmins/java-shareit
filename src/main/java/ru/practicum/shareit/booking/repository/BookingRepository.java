@@ -9,18 +9,18 @@ public interface BookingRepository {
     /**
      * Добавление нового бронирования в хранилище.
      *
-     * @param Booking бронирование (внутреннее представление).
+     * @param booking бронирование (внутреннее представление).
      * @return добавленное бронирование (внутреннее представление).
      */
-    BookingEntity add(BookingEntity Booking);
+    BookingEntity add(BookingEntity booking);
 
     /**
      * Сохранение в хранилище подтверждения или отклонения запроса на бронирование;
      *
-     * @param Booking бронирование (внутреннее представление).
+     * @param booking бронирование (внутреннее представление).
      * @return обновленное бронирование (внутреннее представление).
      */
-    BookingEntity update(BookingEntity Booking);
+    BookingEntity update(BookingEntity booking);
 
     /**
      * Получение данных о конкретном бронировании из хранилища.

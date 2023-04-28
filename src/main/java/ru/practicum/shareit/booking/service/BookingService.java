@@ -11,10 +11,10 @@ public interface BookingService {
      * Сервисная обработка запроса на добавление нового бронирования.
      *
      * @param userId     id пользователя.
-     * @param BookingDto бронирование (внешнее представление).
+     * @param bookingDto бронирование (внешнее представление).
      * @return бронирование (внешнее представление).
      */
-    BookingDto add(Long userId, BookingDto BookingDto);
+    BookingDto add(Long userId, BookingDto bookingDto);
 
     /**
      * Сервисная обработка запроса на подтверждение или отклонение запроса на бронирование.

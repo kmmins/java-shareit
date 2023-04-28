@@ -17,13 +17,13 @@ public class BookingRepositoryDbImpl implements BookingRepository {
     }
 
     @Override
-    public BookingEntity add(BookingEntity Booking) {
-        return bookingRepositoryJpa.save(Booking);
+    public BookingEntity add(BookingEntity booking) {
+        return bookingRepositoryJpa.save(booking);
     }
 
     @Override
-    public BookingEntity update(BookingEntity Booking) {
-        return bookingRepositoryJpa.save(Booking);
+    public BookingEntity update(BookingEntity booking) {
+        return bookingRepositoryJpa.save(booking);
     }
 
     @Override
