@@ -10,8 +10,7 @@ Repository for study project:
 
 Service for searching and booking items that users are willing to share.
 
-ER-diagram [(.png)](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.png)
-[(.md)](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md):
+ER-diagram ([.png](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.png)), ([.md](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md)):
 ```mermaid
 classDiagram
 direction BT
