@@ -8,10 +8,10 @@ Repository for study project:
     │└─┘││││┌┐││││─┼┤├┐│└┐
     └───┴┘└┴┘└┴┘└──┴──┘└─┘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
-These technologies were used for this project:
-Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Query Methods, JPQL Query.
+Service for searching and booking items that users are willing to share.
 
-[ER-diagram](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md):
+ER-diagram [(.png)](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.png)
+[(.md)](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md):
 ```mermaid
 classDiagram
 direction BT
@@ -57,3 +57,5 @@ items  -->  requests : request_id
 items  -->  users : owner_id
 requests  -->  users : request_user_id
 ```
+These technologies were used for this project:
+Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Query Methods, JPQL Query.
