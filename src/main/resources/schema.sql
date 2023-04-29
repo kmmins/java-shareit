@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.items
     description character varying(512) NOT NULL,
     available   boolean                NOT NULL,
     owner_id    bigint                 NOT NULL,
-    request_id  bigint                 NOT NULL,
+    request_id  bigint,
     CONSTRAINT items_pkey PRIMARY KEY (id),
     CONSTRAINT items_owner_id_fkey FOREIGN KEY (owner_id)
         REFERENCES public.users (id)
