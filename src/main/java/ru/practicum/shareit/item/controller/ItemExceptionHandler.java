@@ -10,7 +10,7 @@ import ru.practicum.shareit.exception.*;
 import javax.validation.ValidationException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(assignableTypes = ItemController.class)
 public class ItemExceptionHandler {
 
     @ExceptionHandler
