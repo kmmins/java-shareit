@@ -11,14 +11,14 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceInMemory implements UserService {
+public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceInMemory(@Qualifier("userRepositoryInMemory") UserRepository userRepository) {
+    public UserServiceImpl(@Qualifier("userRepositoryDbImpl") UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -33,7 +33,6 @@ public class UserServiceInMemory implements UserService {
 
     @Override
     public UserDto add(UserDto userDto) {
-        checkDuplicateEmail(userDto);
         var createdUser = UserMapper.convertToModel(userDto);
         var afterCreate = userRepository.add(createdUser);
         return UserMapper.convertToDto(afterCreate);
@@ -41,24 +40,22 @@ public class UserServiceInMemory implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return userRepository.getAll().stream()
-                .map(UserMapper::convertToDto)
-                .collect(Collectors.toList());
+        return UserMapper.mapToDto(userRepository.getAll());
     }
 
     @Override
-    public UserDto getById(Long id) {
-        var userGetById = userRepository.getById(id);
+    public UserDto getById(Long userId) {
+        var userGetById = userRepository.getById(userId);
         if (userGetById == null) {
-            throw new NotFoundException(String.format("Не найден пользователь с id: %d.", id));
+            throw new NotFoundException(String.format("Не найден пользователь с id: %d.", userId));
         }
         return UserMapper.convertToDto(userGetById);
     }
 
     @Override
-    public UserDto updated(Long id, UserDto userDto) {
-        getById(id); // проверка на существование.
-        var updatedUser = userRepository.getById(id);
+    public UserDto updated(Long userId, UserDto userDto) {
+        getById(userId); // проверка на существование пользователя.
+        var updatedUser = userRepository.getById(userId);
         if (userDto.getName() != null) {
             updatedUser.setName(userDto.getName());
         }
@@ -66,13 +63,13 @@ public class UserServiceInMemory implements UserService {
                 userDto.getEmail() != null && !checkDuplicateEmail(userDto)) {
             updatedUser.setEmail(userDto.getEmail());
         }
-        var afterUpdate = userRepository.updated(id, updatedUser);
+        var afterUpdate = userRepository.updated(updatedUser);
         return UserMapper.convertToDto(afterUpdate);
     }
 
     @Override
-    public void deleted(Long id) {
-        getById(id); // проверка на существование.
-        userRepository.deleted(id);
+    public void deleted(Long userId) {
+        getById(userId); // проверка на существование пользователя.
+        userRepository.deleted(userId);
     }
 }

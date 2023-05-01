@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.controller;
+package ru.practicum.shareit.booking.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,12 +10,12 @@ import ru.practicum.shareit.exception.*;
 import javax.validation.ValidationException;
 
 @Slf4j
-@RestControllerAdvice(assignableTypes = ItemController.class)
-public class ItemExceptionHandler {
+@RestControllerAdvice(assignableTypes = BookingController.class)
+public class BookingExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleItemParameter(final ParameterException e) {
+    public ErrorResponse handleBookingParameter(final ParameterException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
@@ -24,7 +24,7 @@ public class ItemExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleItemNotValid(final ValidationException e) {
+    public ErrorResponse handleBookingNotValid(final ValidationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
@@ -33,16 +33,7 @@ public class ItemExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleItemNotAvailable(final NotAvailableException e) {
-        log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleItemNotOwnOrComplete(final NotOwnOrCompleteThisBookingException e) {
+    public ErrorResponse handleBookingNotAvailable(final NotAvailableException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
@@ -51,7 +42,7 @@ public class ItemExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleItemNotFound(final NotFoundException e) {
+    public ErrorResponse handleBookingNotFound(final NotFoundException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
@@ -60,7 +51,25 @@ public class ItemExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleItemNotOwned(final NotOwnByUserException e) {
+    public ErrorResponse handleBookingNotOwn(final NotOwnException e) {
+        log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookingNotOwned(final NotOwnByUserException e) {
+        log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookingNotOwnItemOrBooking(final NotOwnItemOrNotOwnBookingException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()

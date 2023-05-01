@@ -13,8 +13,9 @@ import ru.practicum.shareit.exception.ParameterException;
 import javax.validation.ValidationException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(assignableTypes = UserController.class)
 public class UserExceptionHandler {
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserParameter(final ParameterException e) {

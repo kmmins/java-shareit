@@ -19,10 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
+
     private final UserService userService;
 
     @Autowired
-    public UserController(@Qualifier("userServiceInMemory") UserService userService) {
+    public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
     }
 
@@ -49,15 +50,15 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto updUser(@PathVariable Long id,
-                           @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable Long id,
+                              @RequestBody UserDto userDto) {
         var updatedUserDto = userService.updated(id, userDto);
         log.info("Обработка запроса PATCH /users/{id}. Пользователь обновлен: {}.", updatedUserDto);
         return updatedUserDto;
     }
 
     @DeleteMapping("/{id}")
-    public void delUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.deleted(id);
         log.info("Обработка запроса DELETE /users/{id}. Пользователь c id: {} удален.", id);
     }
