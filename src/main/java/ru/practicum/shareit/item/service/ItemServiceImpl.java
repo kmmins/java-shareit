@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.BookingEntity;
-import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.repository.BookingRepositoryJpa;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.NotOwnByUserException;
 import ru.practicum.shareit.exception.NotOwnOrCompleteThisBookingException;
@@ -12,9 +12,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.mapper.CommentMapper;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.CommentEntity;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.CommentRepositoryJpa;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
@@ -26,30 +24,26 @@ import java.util.*;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final BookingRepository bookingRepository;
-    private final CommentRepository commentRepository;
+    private final BookingRepositoryJpa bookingRepositoryJpa;
+    private final CommentRepositoryJpa commentRepositoryJpa;
     private final UserService userService;
 
     @Autowired
     public ItemServiceImpl(@Qualifier("itemRepositoryDbImpl") ItemRepository itemRepository,
-                           @Qualifier("bookingRepositoryDbImpl") BookingRepository bookingRepository,
-                           @Qualifier("commentRepositoryDbImpl") CommentRepository commentRepository,
+                           CommentRepositoryJpa commentRepositoryJpa,
+                           BookingRepositoryJpa bookingRepositoryJpa,
                            UserService userService) {
         this.itemRepository = itemRepository;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
+        this.commentRepositoryJpa = commentRepositoryJpa;
+        this.bookingRepositoryJpa = bookingRepositoryJpa;
         this.userService = userService;
     }
 
     @Override
     public ItemDto add(Long userId, ItemDto itemDto) {
         userService.getById(userId); // проверка на существование пользователя.
-        var createdModel = new ItemEntity();
-        createdModel.setName(itemDto.getName());
-        createdModel.setDescription(itemDto.getDescription());
-        createdModel.setAvailable(itemDto.getAvailable());
-        createdModel.setOwnerId((userId));
-        var afterCreate = itemRepository.add(createdModel);
+        var createdItem = ItemMapper.convertToModel(userId, itemDto);
+        var afterCreate = itemRepository.add(createdItem);
         return ItemMapper.convertToDto(afterCreate);
     }
 
@@ -99,25 +93,21 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
-        var userDto = userService.getById(userId);
+        var userEntity = UserMapper.convertToModel(userService.getById(userId));
         var itemEntity = itemRepository.getById(itemId);
         if (itemEntity == null) {
             throw new NotFoundException(String.format("Не найден предмет с id %d.", itemId));
         }
-        BookingEntity xBooking = null;
-        var allBookingForThisUser = bookingRepository.getAllForUser(userId);
+        BookingEntity bookingForComment = null;
+        var allBookingForThisUser = bookingRepositoryJpa.findAllByBookerIdOrderByStartTimeDesc(userId);
         for (BookingEntity b : allBookingForThisUser) {
             if (Objects.equals(itemId, b.getItem().getId())) {
-                xBooking = b;
+                bookingForComment = b;
             }
         }
-        if (xBooking != null && xBooking.getEndTime().isBefore(LocalDateTime.now())) {
-            var createdComment = new CommentEntity();
-            createdComment.setText(commentDto.getText());
-            createdComment.setItem(itemEntity);
-            createdComment.setUser(UserMapper.convertToModel(userDto));
-            createdComment.setCreated(LocalDateTime.now());
-            var afterCreate = commentRepository.addComment(createdComment);
+        if (bookingForComment != null && bookingForComment.getEndTime().isBefore(LocalDateTime.now())) {
+            var createdComment = CommentMapper.convertToModel(userEntity, itemEntity, commentDto);
+            var afterCreate = commentRepositoryJpa.save(createdComment);
             return CommentMapper.convertToDto(afterCreate);
         } else {
             throw new NotOwnOrCompleteThisBookingException("Пользователь не арендовал предмет или не завершил аренду.");

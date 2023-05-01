@@ -8,12 +8,12 @@ import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.dto.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.repository.BookingRepositoryJpa;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
+import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -24,22 +24,22 @@ import java.util.stream.Collectors;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    private final BookingRepository bookingRepository;
+    private final BookingRepositoryJpa bookingRepositoryJpa;
     private final ItemRepository itemRepository;
     private final UserService userService;
 
     @Autowired
-    public BookingServiceImpl(@Qualifier("bookingRepositoryDbImpl") BookingRepository bookingRepository,
+    public BookingServiceImpl(BookingRepositoryJpa bookingRepositoryJpa,
                               @Qualifier("itemRepositoryDbImpl") ItemRepository itemRepository,
                               UserService userService) {
-        this.bookingRepository = bookingRepository;
+        this.bookingRepositoryJpa = bookingRepositoryJpa;
         this.itemRepository = itemRepository;
         this.userService = userService;
     }
 
     @Override
     public BookingDto add(Long userId, BookingDto bookingDto) {
-        UserDto thisUser = userService.getById(userId);
+        UserEntity thisUser = UserMapper.convertToModel(userService.getById(userId));
         ItemEntity detectedItem = itemRepository.getById(bookingDto.getItemId());
         if (detectedItem == null) {
             throw new NotFoundException(String.format("Не найден предмет с id %d.", bookingDto.getItemId()));
@@ -54,19 +54,15 @@ public class BookingServiceImpl implements BookingService {
                 bookingDto.getStart().isBefore(LocalDateTime.now())) {
             throw new ParameterException("Ошибка с временем аренды.");
         }
-        BookingEntity createdBooking = new BookingEntity();
-        createdBooking.setItem(detectedItem);
-        createdBooking.setStartTime(bookingDto.getStart());
-        createdBooking.setEndTime(bookingDto.getEnd());
-        createdBooking.setBooker(UserMapper.convertToModel(thisUser));
+        BookingEntity createdBooking = BookingMapper.convertToModel(thisUser, detectedItem, bookingDto);
         createdBooking.setStatus(Status.WAITING);
-        BookingEntity afterCreated = bookingRepository.add(createdBooking);
+        BookingEntity afterCreated = bookingRepositoryJpa.save(createdBooking);
         return BookingMapper.convertToDto(afterCreated);
     }
 
     @Override
     public BookingDto approve(Long userId, Long bookingId, boolean approved) {
-        BookingEntity detectedBooking = bookingRepository.getById(bookingId);
+        BookingEntity detectedBooking = bookingRepositoryJpa.findById(bookingId).orElse(null);
         if (detectedBooking == null) {
             throw new NotFoundException(String.format("Не найдено бронирование с id %d.", bookingId));
         }
@@ -85,33 +81,33 @@ public class BookingServiceImpl implements BookingService {
         } else {
             detectedBooking.setStatus(Status.REJECTED);
         }
-        BookingEntity approvedOrNot = bookingRepository.update(detectedBooking);
+        BookingEntity approvedOrNot = bookingRepositoryJpa.save(detectedBooking);
         return BookingMapper.convertToDto(approvedOrNot);
     }
 
     @Override
     public BookingDto getById(Long userId, Long bookingId) {
-        BookingEntity dB = bookingRepository.getById(bookingId);
-        if (dB == null) {
+        BookingEntity booking = bookingRepositoryJpa.findById(bookingId).orElse(null);
+        if (booking == null) {
             throw new NotFoundException(String.format("Не найдено бронирование с id %d.", bookingId));
         }
-        ItemEntity detectedItem = itemRepository.getById(dB.getItem().getId());
+        ItemEntity detectedItem = itemRepository.getById(booking.getItem().getId());
         if (detectedItem == null) {
-            throw new NotFoundException(String.format("Не найден предмет с id %d.", dB.getItem().getId()));
+            throw new NotFoundException(String.format("Не найден предмет с id %d.", booking.getItem().getId()));
         }
-        if (!Objects.equals(userId, detectedItem.getOwnerId()) && !Objects.equals(userId, dB.getBooker().getId())) {
+        if (!Objects.equals(userId, detectedItem.getOwnerId()) && !Objects.equals(userId, booking.getBooker().getId())) {
             throw new NotOwnItemOrNotOwnBookingException("Данные об аренде доступны только владельцу и арендатору.");
         }
-        return BookingMapper.convertToDto(dB);
+        return BookingMapper.convertToDto(booking);
     }
 
     @Override
     public List<BookingDto> getAllBookingForUser(Long userId, State state) {
-        List<BookingEntity> allFound = bookingRepository.getAllForUser(userId);
-        if (allFound.isEmpty()) {
+        List<BookingEntity> bookingsForUser = bookingRepositoryJpa.findAllByBookerIdOrderByStartTimeDesc(userId);
+        if (bookingsForUser.isEmpty()) {
             throw new NotFoundException(String.format("У пользователя c id: %d нет бронирований.", userId));
         }
-        return filteringByStateParam(allFound, state);
+        return filteringByStateParam(bookingsForUser, state);
     }
 
     @Override
@@ -120,20 +116,20 @@ public class BookingServiceImpl implements BookingService {
         if (allItemsOwnByUser.isEmpty()) {
             throw new NotFoundException(String.format("У пользователя c id: %d нет предметов.", userId));
         }
-        List<BookingEntity> allFound = bookingRepository.getAllForOwnerItems(userId);
-        return filteringByStateParam(allFound, state);
+        List<BookingEntity> bookingsForOwner = bookingRepositoryJpa.findAllForItemOwnByUser(userId);
+        return filteringByStateParam(bookingsForOwner, state);
     }
 
-    private List<BookingDto> filteringByStateParam(List<BookingEntity> allFound, State state) {
+    private List<BookingDto> filteringByStateParam(List<BookingEntity> bookings, State state) {
         switch (state) {
             case ALL:
-                return BookingMapper.mapToDto(allFound);
+                return BookingMapper.mapToDto(bookings);
             case CURRENT:
             case PAST:
             case FUTURE:
             case WAITING:
             case REJECTED:
-                return allFound.stream()
+                return bookings.stream()
                         .filter(b -> isInState(b, state))
                         .map(BookingMapper::convertToDto)
                         .collect(Collectors.toList());

@@ -69,6 +69,15 @@ public class ItemMapper {
         );
     }
 
+    public static ItemEntity convertToModel(Long userId, ItemDto itemDto) {
+        ItemEntity itemModel = new ItemEntity();
+        itemModel.setName(itemDto.getName());
+        itemModel.setDescription(itemDto.getDescription());
+        itemModel.setAvailable(itemDto.getAvailable());
+        itemModel.setOwnerId((userId));
+        return itemModel;
+    }
+
     public static List<ItemDto> mapToDto(List<ItemEntity> items) {
         List<ItemDto> result = new ArrayList<>();
         for (ItemEntity i : items) {
