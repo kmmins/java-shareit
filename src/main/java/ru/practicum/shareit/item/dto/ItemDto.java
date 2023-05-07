@@ -18,12 +18,13 @@ import java.util.List;
 public class ItemDto {
 
     private Long id;
-    @NotBlank(message = "не должно быть пустым")
+    @NotBlank(message = "не должно быть пустым.")
     private String name;
-    @NotBlank(message = "не должно быть пустым")
+    @NotBlank(message = "не должно быть пустым.")
     private String description;
-    @NotNull(message = "не должно быть null")
+    @NotNull(message = "не должно быть null.")
     private Boolean available;
+    private Long requestId;
     private BookingDto lastBooking;
     private BookingDto nextBooking;
     private List<CommentDto> comments;

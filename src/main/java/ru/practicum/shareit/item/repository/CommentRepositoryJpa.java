@@ -6,4 +6,5 @@ import ru.practicum.shareit.item.model.CommentEntity;
 
 @EnableJpaRepositories
 public interface CommentRepositoryJpa extends JpaRepository<CommentEntity, Long> {
+
 }

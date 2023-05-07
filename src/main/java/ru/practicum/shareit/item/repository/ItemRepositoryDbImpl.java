@@ -1,10 +1,10 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.ItemEntity;
-
-import java.util.List;
 
 @Repository
 public class ItemRepositoryDbImpl implements ItemRepository {
@@ -22,8 +22,8 @@ public class ItemRepositoryDbImpl implements ItemRepository {
     }
 
     @Override
-    public List<ItemEntity> getAllItemsOwnByUser(Long userId) {
-        return itemRepositoryJpa.findAllByOwnerId(userId);
+    public Page<ItemEntity> getAllItemsByOwnerId(Long userId, PageRequest pageRequest) {
+        return itemRepositoryJpa.findAllByOwnerId(userId, pageRequest);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ItemRepositoryDbImpl implements ItemRepository {
     }
 
     @Override
-    public List<ItemEntity> search(String text) {
-        return itemRepositoryJpa.searchByNameLikeOrDescriptionLikeIgnoreCaseAndAvailable(text);
+    public Page<ItemEntity> search(String text, PageRequest pageRequest) {
+        return itemRepositoryJpa.searchByNameLikeOrDescriptionLikeIgnoreCaseAndAvailable(text, pageRequest);
     }
 }

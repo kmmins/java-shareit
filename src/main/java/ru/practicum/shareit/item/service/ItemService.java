@@ -22,7 +22,7 @@ public interface ItemService {
      * @param userId id владельца предмета.
      * @return список Dto-моделей предметов конкретного прользователя.
      */
-    List<ItemDto> getAllItemsOwnByUser(Long userId);
+    List<ItemDto> getAllItemsByOwnerId(Long userId, int from, int size);
 
     /**
      * Получение и обработка конкретного предмета.
@@ -49,7 +49,7 @@ public interface ItemService {
      * @param text текст для поиска.
      * @return список Dto-моделей найденных предметов.
      */
-    List<ItemDto> search(String text);
+    List<ItemDto> search(String text, int from, int size);
 
     /**
      * Обработка добавления комментария к предмету.

@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.ItemEntity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -32,10 +34,11 @@ public class ItemRepositoryMemImpl implements ItemRepository {
     }
 
     @Override
-    public List<ItemEntity> getAllItemsOwnByUser(Long userId) {
-        return itemMemoryItemBase.values().stream()
+    public Page<ItemEntity> getAllItemsByOwnerId(Long userId, PageRequest pageRequest) {
+        var result = itemMemoryItemBase.values().stream()
                 .filter(item -> Objects.equals(item.getOwnerId(), userId))
                 .collect(Collectors.toList());
+        return new PageImpl<>(result);
     }
 
     @Override
@@ -54,13 +57,14 @@ public class ItemRepositoryMemImpl implements ItemRepository {
     }
 
     @Override
-    public List<ItemEntity> search(String text) {
+    public Page<ItemEntity> search(String text, PageRequest pageRequest) {
         var lcText = text.toLowerCase();
-        return itemMemoryItemBase.values().stream()
+        var res = itemMemoryItemBase.values().stream()
                 .filter(ItemEntity::getAvailable)
                 .filter(item -> (item.getName().toLowerCase().contains(lcText) && (!lcText.isBlank())) ||
                         (item.getDescription().toLowerCase().contains(lcText) && (!lcText.isBlank()))
                 )
                 .collect(Collectors.toList());
+        return new PageImpl<>(res);
     }
 }

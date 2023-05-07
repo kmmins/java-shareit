@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.repository.BookingRepositoryJpa;
@@ -12,10 +14,12 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.mapper.CommentMapper;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.repository.CommentRepositoryJpa;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.util.PageHelper;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -48,8 +52,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItemsOwnByUser(Long userId) {
-        var allItemThisUserOwn = itemRepository.getAllItemsOwnByUser(userId);
+    public List<ItemDto> getAllItemsByOwnerId(Long userId, int from, int size) {
+        PageRequest pageRequest = PageHelper.createRequest(from, size);
+        Page<ItemEntity> page = itemRepository.getAllItemsByOwnerId(userId, pageRequest);
+        List<ItemEntity> allItemThisUserOwn = page.getContent();
         return ItemMapper.mapToDto(allItemThisUserOwn);
     }
 
@@ -83,11 +89,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, int from, int size) {
+        PageRequest pageRequest = PageHelper.createRequest(from, size);
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        var foundedItems = itemRepository.search(text);
+        Page<ItemEntity> page = itemRepository.search(text, pageRequest);
+        List<ItemEntity> foundedItems = page.getContent();
         return ItemMapper.mapToDto(foundedItems);
     }
 
@@ -99,7 +107,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format("Не найден предмет с id %d.", itemId));
         }
         BookingEntity bookingForComment = null;
-        var allBookingForThisUser = bookingRepositoryJpa.findAllByBookerIdOrderByStartTimeDesc(userId);
+        var allBookingForThisUser = bookingRepositoryJpa.findAllByBookerId(userId);
         for (BookingEntity b : allBookingForThisUser) {
             if (Objects.equals(itemId, b.getItem().getId())) {
                 bookingForComment = b;

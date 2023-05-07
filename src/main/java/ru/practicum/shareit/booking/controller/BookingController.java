@@ -49,24 +49,28 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingDto getByIdBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
                                      @PathVariable Long bookingId) {
-        var bookingGetByIdDto = bookingService.getById(userId, bookingId);
+        var bookingDtoById = bookingService.getById(userId, bookingId);
         log.info("Обработка запроса GET /bookings/{bookingId}. Получены данные о брони: {},", bookingId);
-        return bookingGetByIdDto;
+        return bookingDtoById;
     }
 
     @GetMapping
     public List<BookingDto> getAllBookingsForUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                  @RequestParam(required = false, defaultValue = "ALL") String state) {
-        var allBookingDtoForUser = bookingService.getAllBookingForUser(userId, parseEnum(state));
-        log.info("Обработка запроса GET /bookings?state={state}. Получены все брони пользователя: {}.", userId);
+                                                  @RequestParam(required = false, defaultValue = "ALL") String state,
+                                                  @RequestParam(required = false, defaultValue = "0") int from,
+                                                  @RequestParam(required = false, defaultValue = "10") int size) {
+        var allBookingDtoForUser = bookingService.getAllBookingForUser(userId, parseEnum(state), from, size);
+        log.info("Обработка запроса GET /bookings?state={state}&from={from}&size={size}. Получены все брони пользователя: {}.", userId);
         return allBookingDtoForUser;
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getAllBookingsForOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                   @RequestParam(required = false, defaultValue = "ALL") String state) {
-        var allBookingDtoForOwnerItems = bookingService.getAllBookingForOwnerItems(userId, parseEnum(state));
-        log.info("Обработка запроса GET /bookings/owner?state={state}. Получены брони вещей пользователя: {}.", userId);
+                                                   @RequestParam(required = false, defaultValue = "ALL") String state,
+                                                   @RequestParam(required = false, defaultValue = "0") int from,
+                                                   @RequestParam(required = false, defaultValue = "10") int size) {
+        var allBookingDtoForOwnerItems = bookingService.getAllBookingForOwnerItems(userId, parseEnum(state), from, size);
+        log.info("Обработка запроса GET /bookings/owner?state={state}&from={from}&size={size}. Получены брони вещей пользователя: {}.", userId);
         return allBookingDtoForOwnerItems;
     }
 

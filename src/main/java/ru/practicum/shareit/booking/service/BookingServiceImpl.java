@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.State;
@@ -15,6 +17,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.util.PageHelper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,21 +105,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingForUser(Long userId, State state) {
-        List<BookingEntity> bookingsForUser = bookingRepositoryJpa.findAllByBookerIdOrderByStartTimeDesc(userId);
-        if (bookingsForUser.isEmpty()) {
-            throw new NotFoundException(String.format("У пользователя c id: %d нет бронирований.", userId));
-        }
+    public List<BookingDto> getAllBookingForUser(Long userId, State state, int from, int size) {
+        userService.getById(userId);
+        PageRequest pageRequest = PageHelper.createRequest(from, size);
+        Page<BookingEntity> page = bookingRepositoryJpa.findAllByBookerIdPage(userId, pageRequest);
+        List<BookingEntity> bookingsForUser = page.getContent();
         return filteringByStateParam(bookingsForUser, state);
     }
 
     @Override
-    public List<BookingDto> getAllBookingForOwnerItems(Long userId, State state) {
-        List<ItemEntity> allItemsOwnByUser = itemRepository.getAllItemsOwnByUser(userId);
-        if (allItemsOwnByUser.isEmpty()) {
-            throw new NotFoundException(String.format("У пользователя c id: %d нет предметов.", userId));
-        }
-        List<BookingEntity> bookingsForOwner = bookingRepositoryJpa.findAllForItemOwnByUser(userId);
+    public List<BookingDto> getAllBookingForOwnerItems(Long userId, State state, int from, int size) {
+        userService.getById(userId);
+        PageRequest pageRequest = PageHelper.createRequest(from, size);
+        Page<BookingEntity> pageBookings = bookingRepositoryJpa.findAllForItemOwnByUser(userId, pageRequest);
+        List<BookingEntity> bookingsForOwner = pageBookings.getContent();
         return filteringByStateParam(bookingsForOwner, state);
     }
 

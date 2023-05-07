@@ -42,7 +42,7 @@ public interface BookingService {
      * @param state  параметр отображения бронирований.
      * @return списка всех бронирований (внешнее представление) пользователя.
      */
-    List<BookingDto> getAllBookingForUser(Long userId, State state);
+    List<BookingDto> getAllBookingForUser(Long userId, State state, int from, int size);
 
     /**
      * Получение списка всех бронирований для всех вещей текущего пользователя.
@@ -51,5 +51,5 @@ public interface BookingService {
      * @param state  параметр отображения бронирований.
      * @return списка всех бронирований для всех вещей пользователя.
      */
-    List<BookingDto> getAllBookingForOwnerItems(Long userId, State state);
+    List<BookingDto> getAllBookingForOwnerItems(Long userId, State state, int from, int size);
 }

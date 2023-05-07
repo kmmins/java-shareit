@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.item.model.ItemEntity;
-
-import java.util.List;
 
 public interface ItemRepository {
 
@@ -20,7 +20,7 @@ public interface ItemRepository {
      * @param userId id пользователя.
      * @return список предметов конкретного пользователя.
      */
-    List<ItemEntity> getAllItemsOwnByUser(Long userId);
+    Page<ItemEntity> getAllItemsByOwnerId(Long userId, PageRequest pageRequest);
 
     /**
      * Получить конкретный предмет из хранилища.
@@ -44,5 +44,5 @@ public interface ItemRepository {
      * @param text текст для поиска.
      * @return список полных моделей предметов.
      */
-    List<ItemEntity> search(String text);
+    Page<ItemEntity> search(String text, PageRequest pageRequest);
 }

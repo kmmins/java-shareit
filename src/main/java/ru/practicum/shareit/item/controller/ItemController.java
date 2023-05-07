@@ -37,9 +37,11 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItem(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        var allItemsDto = itemService.getAllItemsOwnByUser(userId);
-        log.info("Обработка запроса GET /items. Получены все предметы владельца: {}.", allItemsDto);
+    public List<ItemDto> getAllItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                    @RequestParam(required = false, defaultValue = "0") int from,
+                                    @RequestParam(required = false, defaultValue = "10") int size) {
+        var allItemsDto = itemService.getAllItemsByOwnerId(userId, from, size);
+        log.info("Обработка запроса GET /items?from={from}&size={size}. Получены все предметы владельца: {}.", allItemsDto);
         return allItemsDto;
     }
 
@@ -61,9 +63,11 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam String text) {
-        var foundItemsDto = itemService.search(text);
-        log.info("Обработка запроса GET /items/search?text={text}. Предмет найден: {}.", foundItemsDto);
+    public List<ItemDto> searchItem(@RequestParam String text,
+                                    @RequestParam(required = false, defaultValue = "0") int from,
+                                    @RequestParam(required = false, defaultValue = "10") int size) {
+        var foundItemsDto = itemService.search(text, from, size);
+        log.info("Обработка запроса GET /items/search?text={text}&from={from}&size={size}. Предмет найден: {}.", foundItemsDto);
         return foundItemsDto;
     }
 

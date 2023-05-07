@@ -15,18 +15,18 @@ ER-diagram ([.png](https://github.com/kmmins/java-shareit/blob/add-bookings/asse
 classDiagram
 direction BT
 class bookings {
-   bigint item_id
    timestamp start_time
    timestamp end_time
-   bigint booker_id
    booking_status status
+   bigint booker_id
+   bigint item_id
    bigint id
 }
 class comments {
    varchar(512) comment_text
-   bigint item_id
-   bigint author_id
    timestamp created
+   bigint author_id
+   bigint item_id
    bigint id
 }
 class items {
@@ -40,6 +40,7 @@ class items {
 class requests {
    varchar(512) description
    bigint request_user_id
+   timestamp with time zone created
    bigint id
 }
 class users {
