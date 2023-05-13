@@ -25,6 +25,7 @@ public class RequestEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
     private String description;
+    @Column(name = "request_user_id")
     private Long requestOwner;
     private LocalDateTime created;
     @OneToMany

@@ -58,4 +58,4 @@ items  -->  users : owner_id
 requests  -->  users : request_user_id
 ```
 These technologies were used for this project:
-Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Query Methods, JPQL Query.
+Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Inferred Queries, JPQL Queries, Native Queries.

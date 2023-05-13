@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -25,7 +24,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @Autowired
-    public BookingController(@Qualifier("bookingServiceImpl") BookingService bookingService) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -60,7 +59,8 @@ public class BookingController {
                                                   @RequestParam(required = false, defaultValue = "0") int from,
                                                   @RequestParam(required = false, defaultValue = "10") int size) {
         var allBookingDtoForUser = bookingService.getAllBookingForUser(userId, parseEnum(state), from, size);
-        log.info("Обработка запроса GET /bookings?state={state}&from={from}&size={size}. Получены все брони пользователя: {}.", userId);
+        log.info("Обработка запроса GET /bookings?state={state}&from={from}&size={size}. " +
+                "Получены все брони пользователя: {}.", userId);
         return allBookingDtoForUser;
     }
 
@@ -70,7 +70,8 @@ public class BookingController {
                                                    @RequestParam(required = false, defaultValue = "0") int from,
                                                    @RequestParam(required = false, defaultValue = "10") int size) {
         var allBookingDtoForOwnerItems = bookingService.getAllBookingForOwnerItems(userId, parseEnum(state), from, size);
-        log.info("Обработка запроса GET /bookings/owner?state={state}&from={from}&size={size}. Получены брони вещей пользователя: {}.", userId);
+        log.info("Обработка запроса GET /bookings/owner?state={state}&from={from}&size={size}. " +
+                "Получены брони вещей пользователя: {}.", userId);
         return allBookingDtoForOwnerItems;
     }
 

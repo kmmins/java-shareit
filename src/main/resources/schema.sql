@@ -1,6 +1,3 @@
---booking status
-CREATE TYPE booking_status AS ENUM
-    ('WAITING', 'APPROVED', 'REJECTED', 'CANCELED');
 --users
 CREATE TABLE IF NOT EXISTS public.users
 (
@@ -50,7 +47,7 @@ CREATE TABLE IF NOT EXISTS public.bookings
     start_time timestamp without time zone,
     end_time   timestamp without time zone,
     booker_id  bigint NOT NULL,
-    status     booking_status,
+    status     character varying(255),
     CONSTRAINT bookings_pkey PRIMARY KEY (id),
     CONSTRAINT bookings_booker_id_fkey FOREIGN KEY (booker_id)
         REFERENCES public.users (id)

@@ -27,16 +27,6 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserEmailDuplicated(final DataIntegrityViolationException e) {
-        log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
-    }
-
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserNotValid(final ValidationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
@@ -56,7 +46,16 @@ public class UserExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserAlreadyExist(final AlreadyExistException e) {
+    public ErrorResponse handleUserNotUniq(final DataIntegrityViolationException e) {
+        log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleUserEmailAlreadyExist(final AlreadyExistException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()

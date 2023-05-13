@@ -17,14 +17,14 @@ public interface BookingRepositoryJpa extends JpaRepository<BookingEntity, Long>
             "where booker_id =?1 " +
             "order by start_time desc",
             nativeQuery = true)
-    List<BookingEntity> findAllByBookerId(Long bookerId);
+    List<BookingEntity> findAllByBookerIdNative(Long bookerId);
 
     @Query(value = "select * " +
             "from bookings " +
             "where booker_id =?1 " +
             "order by start_time desc",
             nativeQuery = true)
-    Page<BookingEntity> findAllByBookerIdPage(Long bookerId, PageRequest pageRequest);
+    Page<BookingEntity> findAllByBookerIdPageNative(Long bookerId, PageRequest pageRequest);
 
     @Query(value = "select * " +
             "from bookings " +
@@ -33,5 +33,5 @@ public interface BookingRepositoryJpa extends JpaRepository<BookingEntity, Long>
             "where owner_id = ?1) " +
             "order by start_time desc",
             nativeQuery = true)
-    Page<BookingEntity> findAllForItemOwnByUser(Long userId, PageRequest pageRequest);
+    Page<BookingEntity> findAllForItemOwnByUserPage(Long userId, PageRequest pageRequest);
 }

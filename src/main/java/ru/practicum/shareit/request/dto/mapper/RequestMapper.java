@@ -6,6 +6,7 @@ import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.RequestEntity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +33,11 @@ public class RequestMapper {
         );
     }
 
-    public static RequestEntity convertToModel(RequestDto requestDto) {
+    public static RequestEntity convertToModel(Long userId, RequestDto requestDto) {
         RequestEntity requestModel = new RequestEntity();
         requestModel.setDescription(requestDto.getDescription());
-        requestModel.setRequestOwner(requestDto.getRequestOwner());
-        requestModel.setCreated(requestDto.getCreated());
+        requestModel.setRequestOwner(userId);
+        requestModel.setCreated(LocalDateTime.now());
         return requestModel;
     }
 

@@ -65,7 +65,8 @@ public class ItemServiceImpl implements ItemService {
         if (itemGetById == null) {
             throw new NotFoundException(String.format("Не найден предмет с id %d.", itemId));
         }
-        return ItemMapper.convertToDto(itemGetById, Objects.equals(itemGetById.getOwnerId(), userId));
+        boolean isOwner = Objects.equals(itemGetById.getOwnerId(), userId);
+        return ItemMapper.convertToDto(itemGetById, isOwner);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format("Не найден предмет с id %d.", itemId));
         }
         BookingEntity bookingForComment = null;
-        var allBookingForThisUser = bookingRepositoryJpa.findAllByBookerId(userId);
+        var allBookingForThisUser = bookingRepositoryJpa.findAllByBookerIdNative(userId);
         for (BookingEntity b : allBookingForThisUser) {
             if (Objects.equals(itemId, b.getItem().getId())) {
                 bookingForComment = b;

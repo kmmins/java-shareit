@@ -12,7 +12,6 @@ import ru.practicum.shareit.request.repository.RequestRepositoryJpa;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.util.PageHelper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,10 +30,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto add(Long userId, RequestDto requestDto) {
         userService.getById(userId);
-        var addedRequest = new RequestEntity();
-        addedRequest.setDescription(requestDto.getDescription());
-        addedRequest.setRequestOwner(userId);
-        addedRequest.setCreated(LocalDateTime.now());
+        var addedRequest = RequestMapper.convertToModel(userId, requestDto);
         var afterCreated = requestRepositoryJpa.save(addedRequest);
         return RequestMapper.convertToDto(afterCreated);
     }
@@ -58,7 +54,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto getById(Long userId, Long requestId) {
         userService.getById(userId);
-        RequestEntity result = requestRepositoryJpa.findById(requestId).orElse(null);
+        var result = requestRepositoryJpa.findById(requestId).orElse(null);
         if (result == null) {
             throw new NotFoundException(String.format("Запрос с id %d не найден.", requestId));
         }
