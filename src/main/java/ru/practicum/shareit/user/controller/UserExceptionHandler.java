@@ -21,44 +21,34 @@ public class UserExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserParameter(final ParameterException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserNotValid(final ValidationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFound(final NotFoundException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUserNotUniq(final DataIntegrityViolationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUserEmailAlreadyExist(final AlreadyExistException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 }

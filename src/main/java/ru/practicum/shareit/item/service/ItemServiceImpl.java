@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.repository.BookingRepositoryJpa;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NotOwnByUserException;
+import ru.practicum.shareit.exception.NotOwnException;
 import ru.practicum.shareit.exception.NotOwnOrCompleteThisBookingException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
         getById(userId, itemId); // проверка на существование предмета.
         var updatedItem = itemRepository.getById(itemId);
         if (!Objects.equals(updatedItem.getOwnerId(), userId)) {
-            throw new NotOwnByUserException("Редактировать предмет может только владелец.");
+            throw new NotOwnException("Редактировать предмет может только владелец.");
         }
         if (itemDto.getName() != null) {
             updatedItem.setName(itemDto.getName());

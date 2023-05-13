@@ -205,7 +205,7 @@ public class BookingServiceImplUnitTests {
     }
 
     @Test
-    public void checkBookingApprove_ThrowExceptionsAndOk() {
+    public void checkBookingApprove_OkAndThrowNotOwnAndWrongStatus() {
         //data
         Long userId = 1L;
         Long wrongUserId = 666L;
@@ -260,12 +260,93 @@ public class BookingServiceImplUnitTests {
                 () -> bookingService.approve(wrongUserId, bookingId, approvedTrue));
         final ParameterException e2 = assertThrows(ParameterException.class,
                 () -> bookingService.approve(userId, wrongBookingId, approvedTrue));
+
         var check = bookingService.approve(userId, bookingId, approvedFalse);
 
         //assert
         assertEquals("Только владелец подтверждает статус брони.", e1.getMessage());
         assertEquals("Подтверждение возможно только находяйщейся в ожидании брони.", e2.getMessage());
         assertEquals(Status.REJECTED, check.getStatus(), "Некорректный статус после подтверждения.");
+    }
+
+    @Test
+    public void checkBookingApprove_ThrowItemNotFound() {
+        Long userId = 1L;
+        var userDto = new UserDto(userId, "name", "name@name.com");
+        Long wrongItemId = 4443333L;
+        var wrongItem = new ItemEntity(wrongItemId);
+        Long wrongBookingIdItem = 333444L;
+        var wrongBookingDtoItem = new BookingDto();
+        wrongBookingDtoItem.setId(wrongBookingIdItem);
+        var wrongBooking = BookingMapper.convertToModel(UserMapper.convertToModel(userDto), wrongItem, wrongBookingDtoItem);
+        when(bookingRepositoryJpa.findById(wrongBookingIdItem))
+                .thenReturn(Optional.of(wrongBooking));
+        when(itemRepository.getById(wrongItemId))
+                .thenReturn(null);
+
+        //test
+        final NotFoundException e1 = assertThrows(NotFoundException.class,
+                () -> bookingService.approve(userId, wrongBookingIdItem, true));
+
+        //assert
+        assertEquals(String.format("Не найден предмет с id %d.", wrongItemId), e1.getMessage());
+    }
+
+    @Test
+    public void checkBookingApprove_ThrowBookingNotFound() {
+        Long userId = 1L;
+        Long wrongBookingIdNotFound = 555666L;
+        var wrongBookingDtoNotFound = new BookingDto();
+        wrongBookingDtoNotFound.setId(wrongBookingIdNotFound);
+        when(bookingRepositoryJpa.findById(wrongBookingIdNotFound))
+                .thenReturn(Optional.empty());
+
+        //test
+        final NotFoundException e1 = assertThrows(NotFoundException.class,
+                () -> bookingService.approve(userId, wrongBookingIdNotFound, true));
+
+        //assert
+        assertEquals(String.format("Не найдено бронирование с id %d.", wrongBookingIdNotFound), e1.getMessage());
+    }
+
+    @Test
+    public void checkBookingGetById_NotFoundBooking() {
+        //data
+        Long userId = 1L;
+        Long wrongBookingId = 111222L;
+        when(bookingRepositoryJpa.findById(wrongBookingId))
+                .thenReturn(Optional.empty());
+
+        //test
+        final NotFoundException e1 = assertThrows(NotFoundException.class,
+                () -> bookingService.getById(userId, wrongBookingId));
+
+        //assert
+        assertEquals(String.format("Не найдено бронирование с id %d.", wrongBookingId), e1.getMessage());
+    }
+
+    @Test
+    public void checkBookingGetById_NotFoundItem() {
+        //data
+        Long userId = 1L;
+        Long wrongItemId = 222333L;
+        Long wrongBookingIdNotFoundItem = 333444L;
+        var userDto = new UserDto(userId, "name", "name@name.com");
+        var wrongItem = new ItemEntity(wrongItemId);
+        var bookingDto = new BookingDto();
+        bookingDto.setId(wrongBookingIdNotFoundItem);
+        bookingDto.setBooker(userDto);
+        bookingDto.setItemId(wrongItemId);
+        bookingDto.setStart(LocalDateTime.of(2000, 1, 1, 1, 1));
+        bookingDto.setEnd(LocalDateTime.of(2000, 1, 1, 1, 2));
+        var created = BookingMapper.convertToModel(UserMapper.convertToModel(userDto), wrongItem, bookingDto);
+        when(bookingRepositoryJpa.findById(wrongBookingIdNotFoundItem))
+                .thenReturn(Optional.of(created));
+
+        final NotFoundException e1 = assertThrows(NotFoundException.class,
+                () -> bookingService.getById(userId, wrongBookingIdNotFoundItem));
+
+        assertEquals(String.format("Не найден предмет с id %d.", wrongItemId), e1.getMessage());
     }
 
     @Test

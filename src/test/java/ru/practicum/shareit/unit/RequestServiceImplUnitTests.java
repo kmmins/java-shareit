@@ -18,6 +18,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.util.PageHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +68,9 @@ public class RequestServiceImplUnitTests {
         Long userId = 1L;
         var userDto = new UserDto(userId, "name", "name@name.com");
         var one = new RequestEntity();
+        one.setItems(new ArrayList<>());
         var two = new RequestEntity();
+        two.setItems(new ArrayList<>());
         List<RequestEntity> list = List.of(one, two);
         when(userService.getById(userId))
                 .thenReturn(userDto);

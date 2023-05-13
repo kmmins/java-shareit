@@ -14,7 +14,7 @@ import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepositoryJpa;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NotOwnByUserException;
+import ru.practicum.shareit.exception.NotOwnException;
 import ru.practicum.shareit.exception.NotOwnOrCompleteThisBookingException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -194,7 +194,7 @@ public class ItemServiceImplUnitTests {
                 .thenReturn(itemModel);
 
         //test
-        final NotOwnByUserException e = assertThrows(NotOwnByUserException.class,
+        final NotOwnException e = assertThrows(NotOwnException.class,
                 () -> itemService.updated(userId, 100500L, ItemMapper.convertToDto(itemModel)));
 
         //assert

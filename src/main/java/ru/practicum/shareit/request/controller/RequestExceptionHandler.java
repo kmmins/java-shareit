@@ -19,26 +19,20 @@ public class RequestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleRequestNotValid(final ValidationException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleRequestParameter(final ParameterException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleRequestFound(final NotFoundException e) {
         log.error("При обработке запроса возникла ошибка: {}.", e.getMessage());
-        return new ErrorResponse(
-                e.getMessage()
-        );
+        return new ErrorResponse(e.getMessage());
     }
 }

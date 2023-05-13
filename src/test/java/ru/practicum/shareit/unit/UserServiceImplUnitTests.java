@@ -28,18 +28,18 @@ public class UserServiceImplUnitTests {
     @Test
     public void checkUserAdd_Ok() {
         //data
-        Long userId = 1L;
-        var userDto = new UserDto(userId, "user", "user@user.com");
+        Long user1Id = 1L;
+        var userDto = new UserDto(user1Id, "user", "user@user.com");
         when(userRepository.add(UserMapper.convertToModel(userDto)))
                 .thenReturn(UserMapper.convertToModel(userDto));
 
         //test
-        var check = userService.add(userDto);
+        var check1 = userService.add(userDto);
 
         //assert
-        assertEquals("user", check.getName(), "Некорректное имя после добавления." + check.getName());
-        assertEquals("user@user.com", check.getEmail(), "Некорректная почта после добавления."
-                + check.getName());
+        assertEquals("user", check1.getName(), "Некорректное имя после добавления." + check1.getName());
+        assertEquals("user@user.com", check1.getEmail(), "Некорректная почта после добавления."
+                + check1.getName());
     }
 
     @Test
@@ -73,6 +73,20 @@ public class UserServiceImplUnitTests {
         assertEquals("userUpd@user.com", check.getEmail(), "Некорректная почта после обновления."
                 + check.getName());
         assertEquals(String.format("Email %s уже существует.", wrongEmail.getEmail()), e2.getMessage());
+    }
+
+    @Test
+    void checkUserGetById_Throw404() {
+        //data
+        Long wrongUserId = 333444L;
+        when(userRepository.getById(wrongUserId))
+                .thenReturn(null);
+        //test
+        final NotFoundException e1 = assertThrows(NotFoundException.class,
+                () -> userService.getById(wrongUserId));
+
+        //assert
+        assertEquals(String.format("Не найден пользователь с id: %d.", wrongUserId), e1.getMessage());
     }
 
     @Test

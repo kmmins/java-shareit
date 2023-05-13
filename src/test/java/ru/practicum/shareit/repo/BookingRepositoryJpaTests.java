@@ -1,4 +1,4 @@
-package ru.practicum.shareit.repository;
+package ru.practicum.shareit.repo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,9 @@ public class BookingRepositoryJpaTests {
     @Autowired
     private UserRepositoryJpa userRepositoryJpa;
 
+    private Long userOwn2ItemsHave2BookingsId;
+    private Long bookerWhoHave5BookingsId;
+
     @BeforeEach
     public void addData() {
         UserEntity user1 = new UserEntity(1L, "user1", "user1@user.com");
@@ -40,24 +43,11 @@ public class BookingRepositoryJpaTests {
         var userOwn1ItemHas3Bookings = userRepositoryJpa.save(user1);
         var userOwn2ItemsHave2Bookings = userRepositoryJpa.save(user2);
         var booker = userRepositoryJpa.save(user3);
-        ItemEntity itemA = new ItemEntity(1L);
-        itemA.setName("A");
-        itemA.setDescription("AAA");
-        itemA.setAvailable(true);
-        itemA.setOwnerId(userOwn1ItemHas3Bookings.getId());
-        itemA.setRequestId(null);
-        ItemEntity itemB = new ItemEntity(2L);
-        itemB.setName("B");
-        itemB.setDescription("BBB");
-        itemB.setAvailable(true);
-        itemB.setOwnerId(userOwn2ItemsHave2Bookings.getId());
-        itemB.setRequestId(null);
-        ItemEntity itemC = new ItemEntity(3L);
-        itemC.setName("C");
-        itemC.setDescription("CCC");
-        itemC.setAvailable(true);
-        itemC.setOwnerId(userOwn2ItemsHave2Bookings.getId());
-        itemC.setRequestId(null);
+        userOwn2ItemsHave2BookingsId = userOwn2ItemsHave2Bookings.getId();
+        bookerWhoHave5BookingsId = booker.getId();
+        var itemA = new ItemEntity(1L, "A", "AAA", true, userOwn1ItemHas3Bookings.getId(), null, null, null);
+        var itemB = new ItemEntity(2L, "B", "BBB", true, userOwn2ItemsHave2Bookings.getId(), null, null, null);
+        var itemC = new ItemEntity(3L, "C", "CCC", true, userOwn2ItemsHave2Bookings.getId(), null, null, null);
         var testItemA = itemRepositoryJpa.save(itemA);
         var testItemB = itemRepositoryJpa.save(itemB);
         var testItemC = itemRepositoryJpa.save(itemC);
@@ -100,9 +90,6 @@ public class BookingRepositoryJpaTests {
 
     @Test
     public void checkFindAllForItemOwnByUserPage_Ok() {
-        //data
-        var allUsers = userRepositoryJpa.findAll();
-
         //test
         Query query = em.getEntityManager().createNativeQuery(
                         "select * " +
@@ -112,7 +99,7 @@ public class BookingRepositoryJpaTests {
                         "where owner_id = ?1) " +
                         "order by start_time desc", BookingEntity.class
         );
-        List<BookingEntity> actual = query.setParameter(1, allUsers.get(1))
+        List<BookingEntity> actual = query.setParameter(1, userOwn2ItemsHave2BookingsId)
                 .setFirstResult(0)
                 .setMaxResults(20)
                 .getResultList();
@@ -126,16 +113,13 @@ public class BookingRepositoryJpaTests {
 
     @Test
     public void checkFindAllByBookerIdNative_Ok() {
-        //data
-        var allUsers = userRepositoryJpa.findAll();
-
         //test
         Query query = em.getEntityManager().createNativeQuery("select * " +
                 "from bookings " +
                 "where booker_id =?1 " +
                 "order by start_time desc", BookingEntity.class
         );
-        List<BookingEntity> actual = query.setParameter(1, allUsers.get(2)).getResultList();
+        List<BookingEntity> actual = query.setParameter(1, bookerWhoHave5BookingsId).getResultList();
 
         //assert
         assertEquals(5, actual.size(), "Ошибка в количестве бронирований букера.");
@@ -143,16 +127,13 @@ public class BookingRepositoryJpaTests {
 
     @Test
     public void checkFindAllByBookerIdPageNative_Ok() {
-        //data
-        var allUsers = userRepositoryJpa.findAll();
-
         //test
         Query query = em.getEntityManager().createNativeQuery("select * " +
                 "from bookings " +
                 "where booker_id =?1 " +
                 "order by start_time desc", BookingEntity.class
         );
-        List<BookingEntity> actual = query.setParameter(1, allUsers.get(2))
+        List<BookingEntity> actual = query.setParameter(1, bookerWhoHave5BookingsId)
                 .setFirstResult(0)
                 .setMaxResults(3)
                 .getResultList();

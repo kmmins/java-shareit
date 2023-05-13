@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    private boolean checkDuplicateEmail(UserDto checkedUser) {
+    private boolean checkDuplicateEmail(UserDto user) {
         boolean duplicate = getAll().stream()
-                .anyMatch(u -> Objects.equals(u.getEmail(), checkedUser.getEmail()));
+                .anyMatch(u -> Objects.equals(u.getEmail(), user.getEmail()));
         if (duplicate) {
-            throw new AlreadyExistException(String.format("Email %s уже существует.", checkedUser.getEmail()));
+            throw new AlreadyExistException(String.format("Email %s уже существует.", user.getEmail()));
         }
         return false;
     }
