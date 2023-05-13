@@ -180,7 +180,7 @@ public class ItemServiceImplUnitTests {
     public void checkItemUpdated_NotOwn() {
         //data
         Long userId = 1L;
-        ItemEntity ItemModel = new ItemEntity(
+        ItemEntity itemModel = new ItemEntity(
                 100500L,
                 "B",
                 "BBB",
@@ -191,11 +191,11 @@ public class ItemServiceImplUnitTests {
                 new ArrayList<>()
         );
         when(itemRepository.getById(Mockito.anyLong()))
-                .thenReturn(ItemModel);
+                .thenReturn(itemModel);
 
         //test
         final NotOwnByUserException e = assertThrows(NotOwnByUserException.class,
-                () -> itemService.updated(userId, 100500L, ItemMapper.convertToDto(ItemModel)));
+                () -> itemService.updated(userId, 100500L, ItemMapper.convertToDto(itemModel)));
 
         //assert
         assertEquals("Редактировать предмет может только владелец.", e.getMessage());

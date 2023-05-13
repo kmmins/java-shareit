@@ -46,12 +46,12 @@ public class ItemRepositoryJpaTests {
                         "or upper(item.description) like upper(concat('%', ?1, '%')) " +
                         "and item.available = true", ItemEntity.class
         );
-        ItemEntity actual_name = query.setParameter(1, "TeSt").getSingleResult();
-        ItemEntity actual_description = query.setParameter(1, "отВертка").getSingleResult();
+        ItemEntity actualName = query.setParameter(1, "TeSt").getSingleResult();
+        ItemEntity actualDescription = query.setParameter(1, "отВертка").getSingleResult();
 
         //assert
-        assertEquals(testItem.getName(), actual_name.getName(), "Ошибка поиска по имени.");
-        assertEquals(testItem.getDescription(), actual_description.getDescription(), "Ошибка поиска по описанию.");
+        assertEquals(testItem.getName(), actualName.getName(), "Ошибка поиска по имени.");
+        assertEquals(testItem.getDescription(), actualDescription.getDescription(), "Ошибка поиска по описанию.");
     }
 
     @Test

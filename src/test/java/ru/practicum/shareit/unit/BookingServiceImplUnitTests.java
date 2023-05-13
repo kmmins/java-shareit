@@ -272,7 +272,7 @@ public class BookingServiceImplUnitTests {
     public void checkBookingGetById_IdOkAndWrongUser() {
         //data
         Long userId = 1L;
-        Long WrongUserID = 666L;
+        Long wrongUserId = 666L;
         Long bookingId = 1L;
         Long ownerId = 1L;
         Long itemId = 100500L;
@@ -307,7 +307,7 @@ public class BookingServiceImplUnitTests {
         //test
         var check = bookingService.getById(userId, bookingId);
         final NotOwnItemOrNotOwnBookingException e1 = assertThrows(NotOwnItemOrNotOwnBookingException.class,
-                () -> bookingService.getById(WrongUserID, bookingId));
+                () -> bookingService.getById(wrongUserId, bookingId));
 
         //assert
         assertEquals(bookingId, check.getId(), "Некорректный id бронирования.");
@@ -326,11 +326,11 @@ public class BookingServiceImplUnitTests {
         Long bookerId = 2L;
         Long ownerId = 1L;
         Long itemId = 100500L;
-        State Past = State.PAST;
-        State Future = State.FUTURE;
-        State Rejected = State.REJECTED;
-        State Current = State.CURRENT;
-        State Waiting = State.WAITING;
+        State past = State.PAST;
+        State future = State.FUTURE;
+        State rejected = State.REJECTED;
+        State current = State.CURRENT;
+        State waiting = State.WAITING;
         var userDto = new UserDto(userId, "name", "name@name.com");
         var booker = new UserEntity(bookerId, "booker", "booker@booker.com");
         var itemModel = new ItemEntity(itemId);
@@ -378,11 +378,11 @@ public class BookingServiceImplUnitTests {
                 .thenReturn(page);
 
         //test
-        var check1 = bookingService.getAllBookingForUser(userId, Past, 0, 20);
-        var check2 = bookingService.getAllBookingForUser(userId, Future, 0, 20);
-        var check3 = bookingService.getAllBookingForUser(userId, Rejected, 0, 20);
-        var check4 = bookingService.getAllBookingForUser(userId, Current, 0, 20);
-        var check5 = bookingService.getAllBookingForUser(userId, Waiting, 0, 20);
+        var check1 = bookingService.getAllBookingForUser(userId, past, 0, 20);
+        var check2 = bookingService.getAllBookingForUser(userId, future, 0, 20);
+        var check3 = bookingService.getAllBookingForUser(userId, rejected, 0, 20);
+        var check4 = bookingService.getAllBookingForUser(userId, current, 0, 20);
+        var check5 = bookingService.getAllBookingForUser(userId, waiting, 0, 20);
 
         //assert
         assertEquals(1, check1.size(), "Некорректное число прошлых бронирований.");
@@ -402,7 +402,7 @@ public class BookingServiceImplUnitTests {
         Long itemIdB = 500100L;
         Long oneId = 1L;
         Long twoId = 2L;
-        State ALL = State.ALL;
+        State All = State.ALL;
         var userDto = new UserDto(userId, "name", "name@name.com");
         var booker = new UserEntity(bookerId, "booker", "booker@booker.com");
         var itemModelA = new ItemEntity(itemIdA);
@@ -438,11 +438,11 @@ public class BookingServiceImplUnitTests {
                 .thenReturn(page);
 
         //test
-        var check1 = bookingService.getAllBookingForOwnerItems(userId, ALL, 0, 20);
+        var check1 = bookingService.getAllBookingForOwnerItems(userId, All, 0, 20);
         final ParameterException e1 = assertThrows(ParameterException.class,
-                () -> bookingService.getAllBookingForOwnerItems(userId, ALL, -1, 20));
+                () -> bookingService.getAllBookingForOwnerItems(userId, All, -1, 20));
         final ParameterException e2 = assertThrows(ParameterException.class,
-                () -> bookingService.getAllBookingForOwnerItems(userId, ALL, 0, -1));
+                () -> bookingService.getAllBookingForOwnerItems(userId, All, 0, -1));
 
         //assert
         assertEquals(2, check1.size(), "Некорректное число всех бронирований.");

@@ -46,33 +46,33 @@ public class UserServiceImplUnitTests {
     public void checkUserUpdated_ThrowAndOk() {
         //data
         Long userId = 1L;
-        Long wrongUserID = 100500L;
+        Long wrongUserId = 100500L;
         var userDto = new UserDto(userId, "user", "user@user.com");
         var userDtoUpd = new UserDto(userId, "userUpd", "userUpd@user.com");
-        var WrongEmail = new UserDto(userId, "WrongEmail", "userUpd@user.com");
-        when(userRepository.getById(wrongUserID))
-                .thenThrow(new NotFoundException(String.format("Не найден пользователь с id: %d.", wrongUserID)));
+        var wrongEmail = new UserDto(userId, "WrongEmail", "userUpd@user.com");
+        when(userRepository.getById(wrongUserId))
+                .thenThrow(new NotFoundException(String.format("Не найден пользователь с id: %d.", wrongUserId)));
         when(userRepository.getById(userId))
                 .thenReturn(UserMapper.convertToModel(userDto));
         when(userRepository.updated(UserMapper.convertToModel(userDtoUpd)))
                 .thenReturn(UserMapper.convertToModel(userDtoUpd));
-        when(userRepository.updated(UserMapper.convertToModel(WrongEmail)))
-                .thenThrow(new AlreadyExistException(String.format("Email %s уже существует.", WrongEmail.getEmail())));
+        when(userRepository.updated(UserMapper.convertToModel(wrongEmail)))
+                .thenThrow(new AlreadyExistException(String.format("Email %s уже существует.", wrongEmail.getEmail())));
 
         //test
         final NotFoundException e1 = assertThrows(NotFoundException.class,
-                () -> userService.updated(wrongUserID, userDto));
+                () -> userService.updated(wrongUserId, userDto));
         var check = userService.updated(userId, userDtoUpd);
         final AlreadyExistException e2 = assertThrows(AlreadyExistException.class,
-                () -> userService.updated(userId, WrongEmail));
+                () -> userService.updated(userId, wrongEmail));
 
         //assert
-        assertEquals(String.format("Не найден пользователь с id: %d.", wrongUserID), e1.getMessage());
+        assertEquals(String.format("Не найден пользователь с id: %d.", wrongUserId), e1.getMessage());
         assertEquals("userUpd", check.getName(), "Некорректное имя после обновления."
                 + check.getName());
         assertEquals("userUpd@user.com", check.getEmail(), "Некорректная почта после обновления."
                 + check.getName());
-        assertEquals(String.format("Email %s уже существует.", WrongEmail.getEmail()), e2.getMessage());
+        assertEquals(String.format("Email %s уже существует.", wrongEmail.getEmail()), e2.getMessage());
     }
 
     @Test
