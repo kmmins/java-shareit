@@ -402,7 +402,7 @@ public class BookingServiceImplUnitTests {
         Long itemIdB = 500100L;
         Long oneId = 1L;
         Long twoId = 2L;
-        State All = State.ALL;
+        State all = State.ALL;
         var userDto = new UserDto(userId, "name", "name@name.com");
         var booker = new UserEntity(bookerId, "booker", "booker@booker.com");
         var itemModelA = new ItemEntity(itemIdA);
@@ -438,11 +438,11 @@ public class BookingServiceImplUnitTests {
                 .thenReturn(page);
 
         //test
-        var check1 = bookingService.getAllBookingForOwnerItems(userId, All, 0, 20);
+        var check1 = bookingService.getAllBookingForOwnerItems(userId, all, 0, 20);
         final ParameterException e1 = assertThrows(ParameterException.class,
-                () -> bookingService.getAllBookingForOwnerItems(userId, All, -1, 20));
+                () -> bookingService.getAllBookingForOwnerItems(userId, all, -1, 20));
         final ParameterException e2 = assertThrows(ParameterException.class,
-                () -> bookingService.getAllBookingForOwnerItems(userId, All, 0, -1));
+                () -> bookingService.getAllBookingForOwnerItems(userId, all, 0, -1));
 
         //assert
         assertEquals(2, check1.size(), "Некорректное число всех бронирований.");
