@@ -19,12 +19,12 @@ import java.time.LocalDateTime;
 public class BookingDto {
 
     private Long id;
-    @NotNull(message = "не должно быть null")
+    @NotNull(message = "не должно быть null.")
     private Long itemId;
     private Long bookerId;
-    @NotNull(message = "не должно быть null")
+    @NotNull(message = "не должно быть null.")
     private LocalDateTime start;
-    @NotNull(message = "не должно быть null")
+    @NotNull(message = "не должно быть null.")
     private LocalDateTime end;
     private UserDto booker;
     private ItemDto item;

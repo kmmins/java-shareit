@@ -10,23 +10,23 @@ Repository for study project:
 
 Service for searching and booking items that users are willing to share.
 
-ER-diagram ([.png](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.png)), ([.md](https://github.com/kmmins/java-shareit/blob/add-bookings/assets/shareit.md)):
+ER-diagram ([.png](https://github.com/kmmins/java-shareit/blob/add-item-requests/assets/shareit.png)), ([.md](https://github.com/kmmins/java-shareit/blob/add-item-requests/assets/shareit.md)):
 ```mermaid
 classDiagram
 direction BT
 class bookings {
-   bigint item_id
    timestamp start_time
    timestamp end_time
-   bigint booker_id
    booking_status status
+   bigint booker_id
+   bigint item_id
    bigint id
 }
 class comments {
    varchar(512) comment_text
-   bigint item_id
-   bigint author_id
    timestamp created
+   bigint author_id
+   bigint item_id
    bigint id
 }
 class items {
@@ -40,6 +40,7 @@ class items {
 class requests {
    varchar(512) description
    bigint request_user_id
+   timestamp with time zone created
    bigint id
 }
 class users {
@@ -57,4 +58,4 @@ items  -->  users : owner_id
 requests  -->  users : request_user_id
 ```
 These technologies were used for this project:
-Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Query Methods, JPQL Query.
+Spring Boot, Maven, Lombok, REST, CRUD, PostgreSQL, Jakarta Persistence API, Inferred Queries, JPQL Queries, Native Queries.

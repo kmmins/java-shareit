@@ -63,6 +63,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
+                item.getRequestId(),
                 lastDto,
                 nextDto,
                 CommentMapper.mapToDto(item.getCommentEntityList())
@@ -74,6 +75,7 @@ public class ItemMapper {
         itemModel.setName(itemDto.getName());
         itemModel.setDescription(itemDto.getDescription());
         itemModel.setAvailable(itemDto.getAvailable());
+        itemModel.setRequestId(itemDto.getRequestId());
         itemModel.setOwnerId((userId));
         return itemModel;
     }
