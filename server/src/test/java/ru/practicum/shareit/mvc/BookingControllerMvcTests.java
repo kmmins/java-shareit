@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.State;
@@ -86,28 +85,6 @@ public class BookingControllerMvcTests {
                 .andExpect(jsonPath("$.item").value(bookingDtoAfter.getItem()))
                 .andExpect(jsonPath("$.status").value(bookingDtoAfter.getStatus().toString()));
     }
-
-    /*@Test
-    public void checkAddBooking_NotValidThrow400() throws Exception {
-        Long userId = 1L;
-        BookingDto notValid = new BookingDto(
-                null,
-                null,
-                null,
-                LocalDateTime.of(2023, 10, 9, 8, 7, 0),
-                LocalDateTime.of(2023, 10, 9, 8, 7, 1),
-                null,
-                null,
-                null);
-
-        mockMvc.perform(post("/bookings", notValid)
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(notValid))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-    }*/
 
     @Test
     public void checkApproveBooking_Ok() throws Exception {

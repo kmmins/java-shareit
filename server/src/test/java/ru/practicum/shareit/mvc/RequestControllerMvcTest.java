@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.request.controller.RequestController;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.service.RequestService;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -62,24 +60,6 @@ public class RequestControllerMvcTest {
                 .andExpect(jsonPath("$.created", new DateTimeMatcher(requestDtoAfter.getCreated())))
                 .andExpect(jsonPath("$.items").value(requestDtoAfter.getItems()));
     }
-
-    /*@Test
-    void checkAddRequest_NotValidThrow400() throws Exception {
-        Long userId = 1L;
-        Long requestId = 1L;
-        Long requestOwner = 1L;
-        RequestDto notValid = new RequestDto(
-                requestId, null, requestOwner, LocalDateTime.now(), new ArrayList<>()
-        );
-
-        mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(notValid))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-    }*/
 
     @Test
     public void checkGetAllOwnRequest_Ok() throws Exception {

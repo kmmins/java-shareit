@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.exception.AlreadyExistException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.controller.UserController;
@@ -55,20 +54,6 @@ public class UserControllerMvcTests {
                 .andExpect(jsonPath("$.email").value(userADto.getEmail())
                 );
     }
-
-    /*@Test
-    public void checkAddUser_NotValidThrow400() throws Exception {
-        UserDto userNotValidDto = new UserDto();
-        userNotValidDto.setEmail("userD@user.com");
-
-        mockMvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userNotValidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-    }*/
 
     @Test
     public void checkGetAllUser_Ok() throws Exception {
