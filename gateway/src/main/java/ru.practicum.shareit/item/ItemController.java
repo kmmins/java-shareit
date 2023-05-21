@@ -23,7 +23,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                           @Valid @RequestBody ItemRequestDto itemDto) {
-        log.info("Gateway: POST /items. Add (item dto): {}.", itemDto);
+        log.info("Gateway: POST /items. Add from user (id) {} item (dto): {}.", userId, itemDto);
         return itemClient.addItem(userId, itemDto);
     }
 
@@ -31,7 +31,8 @@ public class ItemController {
     public ResponseEntity<Object> getAllItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @RequestParam(required = false, defaultValue = "0") int from,
                                              @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Gateway: GET /items?from={from}&size={size}. Page from={}, size={}", from, size);
+        log.info("Gateway: GET /items?from={from}&size={size}. Get all for user (id): {}. " +
+                "Page from={}, size={}", userId, from, size);
         return itemClient.getAllItem(userId, from, size);
     }
 
@@ -39,7 +40,8 @@ public class ItemController {
     public ResponseEntity<Object> getByIdItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                               @PathVariable Long itemId) {
         var result = itemClient.getByIdItem(userId, itemId);
-        log.info("Gateway: GET /items/{itemId}. Get (item): {}.", result);
+        log.info("Gateway: GET /items/{itemId}. Get item (id): {}, userId={}. " +
+                "Found item (obj): {}.", itemId, userId, result);
         return result;
     }
 
@@ -47,7 +49,8 @@ public class ItemController {
     public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable Long itemId,
                                              @RequestBody ItemRequestDto itemDto) {
-        log.info("Gateway: PATCH /items/{itemId}. Update (item dto): {}.", itemDto);
+        log.info("Gateway: PATCH /items/{itemId}. Update from user (id): {} item (id): {}. " +
+                "Item (dto) to update: {}.", userId, itemId, itemDto);
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
@@ -65,7 +68,8 @@ public class ItemController {
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable Long itemId,
                                              @Valid @RequestBody CommentRequestDto commentDto) {
-        log.info("Gateway: POST /items/{itemId}/comment. Add (comment dto): {}.", commentDto);
+        log.info("Gateway: POST /items/{itemId}/comment. Add comment from user (id): {} to item (id): {}. " +
+                "Comment (dto): {}.", userId, itemId, commentDto);
         return itemClient.addComment(userId, itemId, commentDto);
     }
 }

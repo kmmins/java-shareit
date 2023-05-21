@@ -25,7 +25,7 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> addBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @Valid @RequestBody BookingRequestDto bookingDto) {
-        log.info("Gateway: POST /bookings. Add (booking dto) {}, userId={}", bookingDto, userId);
+        log.info("Gateway: POST /bookings. Add booking (dto): {}, userId={}", bookingDto, userId);
         return bookingClient.addBooking(userId, bookingDto);
     }
 
@@ -33,15 +33,18 @@ public class BookingController {
     public ResponseEntity<Object> approveBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                                  @PathVariable Long bookingId,
                                                  @RequestParam boolean approved) {
-        log.info("Gateway: PATCH /bookings/{bookingId}?approved={approved}.");
+        log.info("Gateway: PATCH /bookings/{bookingId}?approved={approved}. " +
+                "Booking (id): {} has approved: {}.", bookingId, approved);
         return bookingClient.approveBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getByIdBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                                  @PathVariable Long bookingId) {
-        log.info("Gateway: GET /bookings/{bookingId}. Get (booking id) {}, userId={}", bookingId, userId);
-        return bookingClient.getByIdBooking(userId, bookingId);
+        var result = bookingClient.getByIdBooking(userId, bookingId);
+        log.info("Gateway: GET /bookings/{bookingId}. Get booking (id): {}, userId={}. " +
+                "Found booking (obj): {}.", bookingId, userId, result);
+        return result;
     }
 
     @GetMapping

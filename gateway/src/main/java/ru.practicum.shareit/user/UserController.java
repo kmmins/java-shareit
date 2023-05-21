@@ -21,32 +21,33 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> addUser(@Valid @RequestBody UserRequestDto userDto) {
-        log.info("Gateway: POST /users. Add (user dto): {}.", userDto);
+        log.info("Gateway: POST /users. Add user (dto): {}.", userDto);
         return userClient.addUser(userDto);
     }
 
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
-        log.info("Gateway: GET /users.");
+        log.info("Gateway: GET /users. Get all users.");
         return userClient.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable Long id) {
-        log.info("Gateway: GET /users/{id}. Get (user id): {}.", id);
-        return userClient.getUserById(id);
+        var result = userClient.getUserById(id);
+        log.info("Gateway: GET /users/{id}. Get user (id): {}. Found user (obj): {}.", id, result);
+        return result;
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id,
                                              @RequestBody UserRequestDto userDto) {
-        log.info("Gateway: PATCH /users/{id}. Update (user dto): {}.", userDto);
+        log.info("Gateway: PATCH /users/{id}. Update user (id): {}. User {dto) to update: {}.", id, userDto);
         return userClient.updateUser(id, userDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
-        log.info("Gateway: DELETE /users/{id}. Delete (user id): {}.", id);
+        log.info("Gateway: DELETE /users/{id}. Delete user (id): {}.", id);
         return userClient.deleteUser(id);
     }
 }
